@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!-- saved from url=(0104)https://check-feedback.netlify.app/?fbclid=IwAR3zq-L9GzqRrCTtRfBc_GR8t0IqmYtD7rQT3I88O5tk2ZYKcavw5Ox3rpM -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./Document_files/style.css">
+
+    <title>Document</title>
+ 
+    <style>
+      .container {
+        margin: 0 auto;
+        width: 80%;
+      }
+      .wrap {
+        display: flex;
+        flex-direction: column;
+      }
+      .p {
+        margin: 16px 0;
+      }
+      div {
+        margin-top: 14px;;
+      }
+      .kq {
+        display: flex;
+        align-items: center;
+      }
+      #result {
+        padding-left: 8px;
+        color: red;
+      }
+      .heading {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="formCalPrice" class="container">
+      <h2 class="heading">BẢNG GIÁ</h2>
+      <div class="wrap">
+        <label class="p" for="">Chọn phương thức gửi: </label>
+        <select name="phuogthuc" id="phuongthuc" required="">
+          <option disabled="" hidden="" value="" selected="">Chọn phương thức gửi</option>
+          <option value="1">Hoa Kỳ Về Việt Nam</option>
+          <option value="2">Việt Nam Đến Hoa Kỳ</option>
+          <option value="3">Gửi Hàng Xuyên Bang</option>
+          <option value="4">Gửi Hàng Đường Biển 2 Chiều</option>
+          <option value="5">Gửi Tiền</option>
+          <option value="6">Mua Hộ Lưu Kho</option>
+        </select>
+        <label class="p" for="">Chọn nơi muốn gửi đến: </label>
+        <select name="diachi" id="diachi">
+          <option disabled="" hidden="" value="" selected="">Chọn tỉnh thành</option>
+          <option value="1">Hồ Chí Minh (Sài Gòn)</option>
+          <option value="2">Hoa Kỳ</option>
+          <option value="3">Tỉnh Thành Khác</option>
+        </select>
+        <div class="group_money_send">
+          <label class="p" for="">Cân nặng ước tính (lb) </label>
+          <input type="number" id="kg" name="kg" required="" placeholder="Nhập khối lượng lb">
+        </div>
+       <!-- <div class="group_money_send">
+          <label class="p" for="">Số Tiền Gửi </label>
+          <input type="number" id="money" name="money" required="" placeholder="Nhập số tiền">
+        </div>
+        -->
+      
+        <div class="kq">
+          Giá Tham Khảo 
+          <span id="result">  0 </span>
+        </div>
+      </div>
+    </div>
+  
+    <script type="text/javascript">
+
+      /*  ====== EVENT ======= */
+    var $pt = document.getElementById('phuongthuc');
+
+
+    $pt.addEventListener('change', (event) => {
+      const result = document.getElementById('result');
+      result.innerHTML = '$'+calTotal();
+    });
+
+
+    var $diachi = document.getElementById('diachi');
+
+    $diachi.addEventListener('change', (event) => {
+      const result = document.getElementById('result');
+      result.innerHTML = '$'+calTotal();
+    });
+
+    var $kg = document.getElementById('kg');
+
+    $kg.addEventListener('change', (event) => {
+      const result = document.getElementById('result');
+      result.innerHTML ='$'+ calTotal();
+    });
+
+
+    /*  ====== Funcation Cal Total ======= */
+
+    function calTotal() {
+    
+      var $option = document.querySelectorAll("#formCalPrice option");
+      var _pt = document.getElementById('phuongthuc').value
+      var _addr = 1;
+      var _kg = 0;
+      var _result =0;
+
+      if(document.getElementById('diachi').value){
+        _addr = document.getElementById('diachi').value;
+      }else{
+        _addr = document.getElementById('diachi').value = 1;
+      }
+
+      if(document.getElementById('kg').value){
+        _kg = document.getElementById('kg').value
+      }else{
+        _kg =document.getElementById('kg').value = 1;
+      }
+
+        switch(Number(_pt)) {
+          case 1:
+            if(_kg<10){
+              _kg = 10;
+              document.getElementById('kg').value = 10;
+            }
+            // code block hoa kỳ đến việt nam
+            if(_addr==1){
+              _result = calTotalByFilter(2.79,_kg);
+            }else {
+              _result = calTotalByFilter(3.79,_kg);
+            }
+
+             $option[8].removeAttribute("disabled")
+             $option[9].setAttribute("disabled", "disabled");
+            break;
+
+          case 2:
+  
+            // code block việt nam đến hoa kì
+            if(_kg<22){
+              _kg = 22;
+              document.getElementById('kg').value = 22;
+            }
+          
+            if(_addr==1 && _kg<=22){
+              _result = calTotalByFilter(6.29,_kg);
+            }else if(_addr==1 && (_kg>22 && _kg<66)) {
+              _result = calTotalByFilter(6.99,_kg);
+            }else{
+
+
+              if(_addr==2 && _kg<=22){
+                  _result = calTotalByFilter(6.29,_kg);
+                }else if(_addr==2 && (_kg>22 && _kg<66)) {
+                  _result = calTotalByFilter(6.99,_kg);
+                }else{
+                  _result = calTotalByFilter(8.99,_kg);
+                  }
+            }
+
+            $option[8].setAttribute("disabled", "disabled");
+            $option[9].removeAttribute("disabled")
+            break;
+          case 3:
+            // code block xuyên bang
+            break;
+          case 4:
+            // code block đường biển hai chiều
+            break;
+          case 5:
+            // code block gửi tiền
+            break;
+          case 6:
+            // code block mua hàng lưu kho
+            break;
+          default:
+          $option[9].removeAttribute("disabled")
+            // code block
+        }
+
+        return _result;
+
+      }
+
+      function calTotalByFilter(_price=0,_kg=1) {
+        return parseFloat((_price*_kg).toString()).toFixed(2)
+      }
+
+
+    </script>
+</body></html>
